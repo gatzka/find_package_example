@@ -1,0 +1,43 @@
+cmake_minimum_required(VERSION 3.9)
+project(foo VERSION 1.2.3 LANGUAGES C)
+
+add_library(${PROJECT_NAME}
+    "foo.c"
+    "foo.h"
+)
+add_library(${PROJECT_NAME}:${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    C_STANDARD 11
+    C_STANDARD_REQUIRED ON
+    C_EXTENSIONS OFF
+    PUBLIC_HEADER "foo.h"
+)
+
+install(TARGETS ${PROJECT_NAME} 
+    EXPORT ${PROJECT_NAME}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file("${PROJECT_NAME}ConfigVersion.cmake"
+    VERSION ${${PROJECT_NAME}_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    DESTINATION lib/cmake/${PROJECT_NAME}
+)
+install(EXPORT ${PROJECT_NAME}
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION lib/cmake/${PROJECT_NAME}
+    FILE ${PROJECT_NAME}Config.cmake
+)
+
+
