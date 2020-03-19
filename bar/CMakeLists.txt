@@ -39,8 +39,9 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
 )
 install(EXPORT ${PROJECT_NAME}
     DESTINATION lib/cmake/${PROJECT_NAME}
-    FILE "${PROJECT_NAME}Config.cmake"
+    FILE "${PROJECT_NAME}PrivateConfig.cmake"
     NAMESPACE ${PROJECT_NAME}::
 )
+install(FILES ${PROJECT_NAME}Config.cmake DESTINATION lib/cmake/bar)
 
 
